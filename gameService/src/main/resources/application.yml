@@ -1,0 +1,69 @@
+spring:
+  application:
+    name: testApp
+    host: localhost
+    logginghost: localhost
+#  config:
+#    import: 'consul:'
+#  cloud:
+#    consul:
+#      host: localhost # host: consul # modified to use docker-compose
+#      port: 8500
+#      discovery:
+#        healthCheckInterval: 1s
+#        healthCheckPath: ${server.servlet.context-path}/actuator/health
+#        instance-id: ${spring.application.name}:${random.value}
+#        queryPassing: true
+#      enabled: true
+#      config: #src: https://cloud.spring.io/spring-cloud-static/spring-cloud-consul/1.3.3.RELEASE/single/spring-cloud-consul.html
+#        enabled: true #enabled setting this value to "false" disables Consul Config
+#        prefix: config #prefix sets the base folder for configuration values
+#        defaultContext: apps #defaultContext sets the folder name used by all applications
+#        profileSeparator: '::' #profileSeparator sets the value of the separator used to separate the profile name in property sources with profiles
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    datasource:
+      url: jdbc:h2:mem:productsdb
+    h2:
+      console: enabled
+server:
+  servlet:
+    context-path: /test-service
+  port: 8080
+#logging: #src: https://docs.spring.io/spring-boot/docs/2.1.13.RELEASE/reference/html/boot-features-logging.html#boot-features-custom-log-levels
+#  level:
+#    root: warn
+#    springframework:
+#      web: info
+#    hibernate: error
+management: #src: https://spring.academy/guides/spring-spring-prometheus
+  endpoints:
+    web:
+      exposure:
+        include: [ "health", "metrics", "prometheus" ] #add prometheus to the actuator endpoint
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  oltp: #src: https://medium.com/@ahmadalammar/comprehensive-observability-in-spring-boot-using-opentelemetry-prometheus-grafana-tempo-and-4d50c2f2b711
+    tracing:
+      export:
+        gRPC_url: http://localhost:4317
+        http_endpoint: http://localhost:4318/v1/traces
+        step: 10s
+  tracing:
+    sampling:
+      probability: 1.0 #dependent on how much you want to trace
+      #src: https://amithkumarg.medium.com/distributed-tracing-with-spring-boot-micrometer-opentelemetry-and-jaeger-fafd5c0bd282
+logging:
+  file:
+    path: C:\Users\bjorn\docker_volumes\soa-project\log
+  level:
+    org: info
+#service:
+#  pipelines:
+#    traces:
+#      receivers: [ otlp ]
+#      exporters: [ otlp, logging ]
+
