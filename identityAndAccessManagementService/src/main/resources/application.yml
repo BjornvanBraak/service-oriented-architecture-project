@@ -2,6 +2,7 @@ spring:
   application:
     name: testApp
     host: localhost
+    database-name: ${spring.application.name}-DB
     logginghost: localhost
 #  config:
 #    import: 'consul:'
@@ -28,10 +29,13 @@ spring:
       url: jdbc:h2:mem:productsdb
     h2:
       console: enabled
+  sql:
+    init:
+      mode: always
 server:
   servlet:
-    context-path: /test-service
-  port: 8080
+    context-path: /customer-service
+  port: 8083
 #logging: #src: https://docs.spring.io/spring-boot/docs/2.1.13.RELEASE/reference/html/boot-features-logging.html#boot-features-custom-log-levels
 #  level:
 #    root: warn

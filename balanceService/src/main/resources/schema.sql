@@ -5,3 +5,9 @@ CREATE TABLE product (
   description VARCHAR(250) NOT NULL,
   price DECIMAL DEFAULT NULL
 );
+
+CREATE TABLE balance (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  balance INT NOT NULL DEFAULT 0,
+  customer_id INT NOT NULL
+);

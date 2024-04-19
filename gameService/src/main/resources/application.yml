@@ -1,6 +1,7 @@
 spring:
   application:
     name: testApp
+    database-name: ${spring.application.name}-DB
     host: localhost
     logginghost: localhost
 #  config:
@@ -20,18 +21,22 @@ spring:
 #        prefix: config #prefix sets the base folder for configuration values
 #        defaultContext: apps #defaultContext sets the folder name used by all applications
 #        profileSeparator: '::' #profileSeparator sets the value of the separator used to separate the profile name in property sources with profiles
+  sql:
+    init:
+      mode: always
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
+#    defer-datasource-initialization: true #allows the hibernate to create the database tables before populating them, src: https://www.baeldung.com/spring-boot-data-sql-and-schema-sql
     hibernate:
       ddl-auto: update
     datasource:
-      url: jdbc:h2:mem:productsdb
+      url: jdbc:h2:mem:${spring.application.database-name}
     h2:
       console: enabled
 server:
   servlet:
-    context-path: /test-service
-  port: 8080
+    context-path: /game-service
+  port: 8081
 #logging: #src: https://docs.spring.io/spring-boot/docs/2.1.13.RELEASE/reference/html/boot-features-logging.html#boot-features-custom-log-levels
 #  level:
 #    root: warn

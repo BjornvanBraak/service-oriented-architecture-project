@@ -6,3 +6,8 @@ INSERT INTO product (product_id,name,description,price) VALUES
 (104,'Watch','Shows time',300.00),
 (104,'Costly Watch','Shows time and your social status',5300.00),
 (105,'Costly Smart Phone','For smart and wealthy people',2800.00);
+
+INSERT INTO balance (balance, customer_id) VALUES
+(200, 1),
+(100, 2),
+(50, 3);

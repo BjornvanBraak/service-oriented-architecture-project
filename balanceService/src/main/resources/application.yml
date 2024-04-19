@@ -1,6 +1,7 @@
 spring:
   application:
     name: testApp
+    database-name: ${spring.application.name}-DB
     host: localhost
     logginghost: localhost
 #  config:
@@ -25,13 +26,16 @@ spring:
     hibernate:
       ddl-auto: update
     datasource:
-      url: jdbc:h2:mem:productsdb
+      url: jdbc:h2:mem:${spring.application.database-name}
     h2:
       console: enabled
+  sql:
+    init:
+      mode: always
 server:
   servlet:
-    context-path: /test-service
-  port: 8080
+    context-path: /balance-service
+  port: 8084
 #logging: #src: https://docs.spring.io/spring-boot/docs/2.1.13.RELEASE/reference/html/boot-features-logging.html#boot-features-custom-log-levels
 #  level:
 #    root: warn

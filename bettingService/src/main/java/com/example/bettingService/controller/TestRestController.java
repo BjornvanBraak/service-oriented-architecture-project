@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 @RequestMapping("/test")
 public class TestRestController {
+
     private final RestTemplate restTemplate;
 //    @Autowired
 //    private ExternalConsulConfig externalConsulConfig;
