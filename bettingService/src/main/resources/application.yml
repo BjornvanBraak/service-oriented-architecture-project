@@ -1,6 +1,6 @@
 spring:
   application:
-    name: testApp
+    name: bettingService
     host: localhost
     database-name: ${spring.application.name}-DB
     logginghost: localhost
@@ -34,7 +34,7 @@ spring:
       mode: always
 server:
   servlet:
-    context-path: /bet-service
+    context-path: /betting-service
   port: 8082
 #logging: #src: https://docs.spring.io/spring-boot/docs/2.1.13.RELEASE/reference/html/boot-features-logging.html#boot-features-custom-log-levels
 #  level:

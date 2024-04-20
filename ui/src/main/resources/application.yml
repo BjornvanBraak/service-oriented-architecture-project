@@ -1,6 +1,6 @@
 spring:
   application:
-    name: testApp
+    name: uiService
     host: localhost
     logginghost: localhost
 #  config:
@@ -25,7 +25,7 @@ spring:
     hibernate:
       ddl-auto: update
     datasource:
-      url: jdbc:h2:mem:productsdb
+      url: jdbc:h2:mem:ui-DB
     h2:
       console: enabled
 server:
@@ -66,4 +66,10 @@ logging:
 #    traces:
 #      receivers: [ otlp ]
 #      exporters: [ otlp, logging ]
+external-services:
+  domainAddresses:
+    gameService: localhost:8081/game-service
+    bettingService: localhost:8082/betting-service
+    iamService: localhost:8083/iam-service
+    balanceService: localhost:8084/balance-service
 

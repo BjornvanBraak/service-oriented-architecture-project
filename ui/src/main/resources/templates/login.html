@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <a href="/">index</a>
+    <a href="/login">login</a>
+    <h1>login</h1>
+    <div>
+        <form action="#" th:action="@{/api/v1/api-gateway/login}" th:object="${loginAttempt}" method="post">
+            <div>
+                <label for="username">username</label>
+                <input id="username" type="text" th:field="*{username}" name="username" autocomplete="username"/>
+            </div>
+            <div>
+                <label for="password">password</label>
+                <input id="password" type="password" th:field="*{password}" name="password" autocomplete="current-password"/>
+            </div>
+            <div>
+                <button type="reset" value="Reset">reset</button>
+                <button type="submit">submit</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
