@@ -7,7 +7,8 @@
 </head>
 <body>
     <header th:replace="fragments/header :: header"></header>
-    <h1>index page</h1>
-    <p th:text="${user}"></p>
+    <h1>error page</h1>
+    <p th:text="'something went wrong when processing the request:' + ${error.userErrorMsg}"></p>
+    <p th:text="'DEV MODE MESSAGE: ' + ${error.devErrorMsg}"></p>
 </body>
 </html>

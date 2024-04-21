@@ -7,6 +7,7 @@ import com.example.ui.exception.ServiceNotFound;
 import com.example.ui.helpers.DomainResolver;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -27,25 +28,11 @@ public class APIGatewayRestController {
     @Autowired
     private DomainResolver domainResolver;
 
-    @GetMapping("/test")
-    private Object test(){
-        try {
-            URI endpoint = domainResolver.getUrl("iamService", "/test/online");
-            String result = restTemplate.getForObject(endpoint, String.class);
-            return result;
-        } catch (ServiceNotFound e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public LoginAttemptResponse verifyLoginAttempt(LoginAttempt loginAttempt){
         try {
             URI url = domainResolver.getUrl("iamService", "/api/v1/auth");
-            CustomerResponse customer = restTemplate.postForObject(url, loginAttempt, CustomerResponse.class);
-            if(customer == null){
-                return new LoginAttemptResponse(false, null);
-            }
-            return new LoginAttemptResponse(true, customer);
+            LoginAttemptResponse loginAttemptResponse = restTemplate.postForObject(url, loginAttempt, LoginAttemptResponse.class);
+           return loginAttemptResponse;
         } catch (ServiceNotFound e) {
             throw new RuntimeException(e);
         }

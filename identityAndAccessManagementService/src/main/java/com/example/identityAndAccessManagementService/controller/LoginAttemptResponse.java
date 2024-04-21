@@ -1,5 +1,6 @@
-package com.example.ui.entity;
+package com.example.identityAndAccessManagementService.controller;
 
+import com.example.identityAndAccessManagementService.entity.Customer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,5 +13,5 @@ import java.util.Optional;
 public class LoginAttemptResponse {
     private boolean successfulLogin;
     private String sessionToken;
-    private Optional<CustomerResponse> customer;
+    private Optional<Customer> customer;
 }

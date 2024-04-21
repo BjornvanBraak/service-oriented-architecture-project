@@ -1,6 +1,6 @@
 <header th:fragment="header">
     <a href="/">index</a>
     <a href="/login">login</a>
-    <a th:if="${username!='USERNAME_COOKIE_NOT_SET'}" href="/logout">logout</a>
-    <p th:if="${username!='USERNAME_COOKIE_NOT_SET'}" th:text="'logged in as:' + ${username}"></p>
+    <a th:if="${user}" href="/logout">logout</a>
+    <p th:if="${user}" th:text="'logged in as:' + ${user.name}"></p>
 </header>

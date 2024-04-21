@@ -21,8 +21,13 @@ public class AuthRestController {
     private AuthService authService;
 
     @PostMapping("")
-    public Optional<Customer> login(@RequestBody LoginAttempt loginAttempt){
-        return authService.loginAttempt(loginAttempt.username, loginAttempt.password);
+    public LoginAttemptResponse login(@RequestBody LoginAttempt loginAttempt){
+        Optional<Customer> customer = authService.loginAttempt(loginAttempt.username, loginAttempt.password);
+        if(customer.isEmpty()){
+            return new LoginAttemptResponse(false, null, null);
+        }
+        String generated_session_token = "test";
+        return new LoginAttemptResponse(true, generated_session_token, customer);
     }
 
 
