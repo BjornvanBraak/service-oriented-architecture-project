@@ -13,5 +13,5 @@ import java.util.Optional;
 public class LoginAttemptResponse {
     private boolean successfulLogin;
     private String sessionToken;
-    private Optional<Customer> customer;
+    private Customer customer;
 }

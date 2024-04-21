@@ -9,8 +9,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -18,6 +20,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Optional;
 
 //@RestController
 @Controller
@@ -52,15 +55,20 @@ public class UIController {
         return "login";
     }
 
-    @PostMapping("/login")
-    private RedirectView loginAttempt(@ModelAttribute LoginAttempt loginAttempt, HttpServletResponse response, HttpSession session){
-        System.out.println(loginAttempt);
+    @PostMapping(path = "/login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    private RedirectView loginAttempt(@RequestParam String username, @RequestParam String password, HttpServletResponse response, HttpSession session){
+        LoginAttempt loginAttempt = new LoginAttempt(username, password);
+        System.out.println(loginAttempt.getUsername());
         LoginAttemptResponse gatewayResponse = apiGatewayRestController.verifyLoginAttempt(loginAttempt);
+        System.out.println(gatewayResponse.getSessionToken());
         if(!gatewayResponse.isSuccessfulLogin()){
             return new RedirectView("/login");
         }
         //set the user for this session
-        session.setAttribute("user", gatewayResponse.getCustomer());
+        CustomerResponse customerResponse= gatewayResponse.getCustomer();
+        if(customerResponse != null){
+            session.setAttribute("user", customerResponse);
+        }
         //create cookie
         String sessionToken = gatewayResponse.getSessionToken();
         Cookie sessionCookie = createSessionCookie(sessionToken);
@@ -93,8 +101,8 @@ public class UIController {
         return "error-ui";
     }
 
-    private Cookie createSessionCookie(String username){
-        Cookie usernameCookie = new Cookie("sessionToken", username);
+    private Cookie createSessionCookie(String sessionToken){
+        Cookie usernameCookie = new Cookie("sessionToken", sessionToken);
         usernameCookie.setMaxAge(86400);
         usernameCookie.setSecure(false);
         usernameCookie.setHttpOnly(false);

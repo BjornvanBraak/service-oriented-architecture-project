@@ -5,3 +5,9 @@ CREATE TABLE customer (
   email VARCHAR(250) NOT NULL,
   cruks BOOLEAN NOT NULL
 );
+
+CREATE TABLE sessions (
+  session_id VARCHAR(250) NOT NULL PRIMARY KEY,
+  customer_id INT NOT NULL,
+  FOREIGN KEY (customer_id) REFERENCES customer (id)
+);

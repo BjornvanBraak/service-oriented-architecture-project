@@ -1,6 +1,9 @@
 package com.example.identityAndAccessManagementService.controller;
 
 import com.example.identityAndAccessManagementService.entity.Customer;
+import com.example.identityAndAccessManagementService.entity.Session;
+import com.example.identityAndAccessManagementService.repository.IAMRepository;
+import com.example.identityAndAccessManagementService.repository.SessionRepository;
 import com.example.identityAndAccessManagementService.services.AuthService;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,14 +23,28 @@ public class AuthRestController {
     @Autowired
     private AuthService authService;
 
+    @Autowired
+    private SessionRepository sessionRepository;
+
+    @GetMapping("/token/{sessionToken}")
+    public boolean verifySessionToken(@PathVariable String sessionToken){
+        return authService.verifySessionToken(sessionToken);
+    }
+
+    @GetMapping("/tokens")
+    public Iterable<Session> getAllTokens(){
+        return sessionRepository.findAll();
+    }
+
     @PostMapping("")
     public LoginAttemptResponse login(@RequestBody LoginAttempt loginAttempt){
         Optional<Customer> customer = authService.loginAttempt(loginAttempt.username, loginAttempt.password);
         if(customer.isEmpty()){
             return new LoginAttemptResponse(false, null, null);
         }
-        String generated_session_token = "test";
-        return new LoginAttemptResponse(true, generated_session_token, customer);
+        String generated_session_token = "test_session_" + String.valueOf((int) Math.floor(Math.random() * 100000));
+        authService.saveSessionToken(generated_session_token, customer.get().getId());
+        return new LoginAttemptResponse(true, generated_session_token, customer.get());
     }
 
 
