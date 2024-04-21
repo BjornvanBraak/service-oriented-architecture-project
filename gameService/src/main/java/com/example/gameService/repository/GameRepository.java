@@ -10,11 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface GameRepository extends CrudRepository<Game,Long> {
-//    Game save(Game game);
-//    List<Game> findAll();
-//    List<Game> findAllById(List<Long> ids);
-//    Optional<Game> findById(Long id);
-//    boolean existsById(Long id);
-//    void deleteById(Long id);
 
 }

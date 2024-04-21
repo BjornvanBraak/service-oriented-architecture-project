@@ -10,14 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface GameResultRepository extends CrudRepository<GameResult,Long> {
-
-//    GameResult save(GameResult gameResult);
-//    List<GameResult> findAll();
-//    List<GameResult> findAllById(List<Long> ids);
-//    Optional<GameResult> findById(Long id);
-//    boolean existsById(Long id);
-//
-//    void deleteById(Long id);
-
     public GameResult findByGameId(Long gameId);
 }

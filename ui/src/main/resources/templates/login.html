@@ -10,7 +10,7 @@
     <a href="/login">login</a>
     <h1>login</h1>
     <div>
-        <form action="#" th:action="@{/api/v1/api-gateway/login}" th:object="${loginAttempt}" method="post">
+        <form action="#" th:action="@{/login}" th:object="${loginAttempt}" method="post">
             <div>
                 <label for="username">username</label>
                 <input id="username" type="text" th:field="*{username}" name="username" autocomplete="username"/>
