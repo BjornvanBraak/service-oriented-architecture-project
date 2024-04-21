@@ -1,11 +1,3 @@
-CREATE TABLE product (
-  id INT AUTO_INCREMENT  PRIMARY KEY,
-  product_id INT NOT NULL,
-  name VARCHAR(250) NOT NULL,
-  description VARCHAR(250) NOT NULL,
-  price DECIMAL DEFAULT NULL
-);
-
 CREATE TABLE bet (
   id INT AUTO_INCREMENT PRIMARY KEY,
   bet_value_creator FLOAT NOT NULL,

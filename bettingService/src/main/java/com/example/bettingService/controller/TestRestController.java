@@ -1,8 +1,6 @@
 package com.example.bettingService.controller;
 
 //import com.example.bettingService.config.ExternalConsulConfig;
-import com.example.bettingService.entity.ProductResponse;
-import com.example.bettingService.repository.ProductRepository;
 import com.github.loki4j.slf4j.marker.LabelMarker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +23,8 @@ public class TestRestController {
 //    @Autowired
 //    private DiscoveryClient discoveryClient;
 
-    @Autowired
-    private ProductRepository testRepository;
+//    @Autowired
+//    private ProductRepository testRepository;
 
 
 //    @Value("${spring.cloud.consul.discovery.instance-id}")
@@ -87,9 +85,9 @@ public class TestRestController {
 //        return externalConsulConfig.testConsulKV();
 //    }
 
-    @GetMapping("/database")
-    private ProductResponse testDatabase(){
-        return new ProductResponse(testRepository.findAll());
-    }
+//    @GetMapping("/database")
+//    private ProductResponse testDatabase(){
+//        return new ProductResponse(testRepository.findAll());
+//    }
 
 }
