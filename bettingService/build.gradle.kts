@@ -77,6 +77,9 @@ dependencies {
 	//TESTING (unverified)
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 
+	//message que arno
+	implementation("org.springframework.boot:spring-boot-starter-activemq")
+
 //	still missing
 //	elk
 //	grafana

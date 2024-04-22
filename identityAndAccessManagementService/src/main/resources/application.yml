@@ -32,6 +32,10 @@ spring:
   sql:
     init:
       mode: always
+  activemq:
+    broker-url: tcp://localhost:61616?wireFormat.maxInactivityDurationInitalDelay=30000
+    user: admin
+    password: admin
 server:
   servlet:
     context-path: /iam-service

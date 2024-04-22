@@ -28,6 +28,9 @@ LABEL logging=promtail
 ENV MANAGEMENT_OLTP_TRACING_EXPORT_GRPC_URL=http://host.docker.internal:4317
 ENV MANAGEMENT_OLTP_TRACING_EXPORT_HTTP_ENDPOINT=http://host.docker.internal:4318/v1/traces
 
+ENV SPRING_ACTIVEMQ_BROKER-URL="tcp://host.docker.internal:61616?wireFormat.maxInactivityDurationInitalDelay=30000"
+
+
 COPY ${JAR_FILE} app.jar
 
 ENTRYPOINT [ "java", "-jar",  "/app.jar"]

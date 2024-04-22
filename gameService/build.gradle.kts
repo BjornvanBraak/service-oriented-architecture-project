@@ -81,6 +81,9 @@ dependencies {
 //	elk
 //	grafana
 //	nginx
+	//message queue arno
+	implementation("org.springframework.boot:spring-boot-starter-activemq")
+
 }
 
 dependencyManagement {
