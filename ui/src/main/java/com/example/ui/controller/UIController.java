@@ -1,9 +1,7 @@
 package com.example.ui.controller;
 
-import com.example.ui.entity.CustomerResponse;
+import com.example.ui.entity.*;
 import com.example.ui.entity.Error;
-import com.example.ui.entity.LoginAttempt;
-import com.example.ui.entity.LoginAttemptResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -20,6 +18,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 //@RestController
@@ -45,7 +44,14 @@ public class UIController {
     }
 
     @GetMapping("")
-    private String index(Model model){
+    private String index(Model model, HttpSession session, RedirectAttributes redirectAttributes){
+        CustomerResponse customer = (CustomerResponse) session.getAttribute("user");
+        if(customer == null){
+            redirectAttributes.addFlashAttribute("error", new Error("you are not logged in, please go to /login", "User has authenticated, but user has not been set (likely not logged out so cookie is still there)"));
+            return "redirect:/exception";
+        }
+        List<BetResponse> bets = apiGatewayRestController.getBets(customer.getId());
+        model.addAttribute("bets", bets);
         return "index";
     }
 
@@ -56,12 +62,16 @@ public class UIController {
     }
 
     @PostMapping(path = "/login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    private RedirectView loginAttempt(@RequestParam String username, @RequestParam String password, HttpServletResponse response, HttpSession session){
+    private RedirectView loginAttempt(@RequestParam String username, @RequestParam String password, HttpServletResponse response, HttpSession session){;
         LoginAttempt loginAttempt = new LoginAttempt(username, password);
-        System.out.println(loginAttempt.getUsername());
+        log.info("user login attempt with username: ", loginAttempt.getUsername());
+
+        //verify username + password in iamService
         LoginAttemptResponse gatewayResponse = apiGatewayRestController.verifyLoginAttempt(loginAttempt);
-        System.out.println(gatewayResponse.getSessionToken());
+
+        //based on response redirect to login if unsuccessful else to home page.
         if(!gatewayResponse.isSuccessfulLogin()){
+            log.warn("unsuccessful login attempt with username: ", loginAttempt.getUsername());
             return new RedirectView("/login");
         }
         //set the user for this session
@@ -79,7 +89,8 @@ public class UIController {
 
     @GetMapping("/logout")
     private RedirectView logout(HttpServletResponse response, RedirectAttributes redirectAttributes, HttpSession session){
-        if(!apiGatewayRestController.logout()){
+        CustomerResponse customerResponse = (CustomerResponse) session.getAttribute("user");
+        if(!apiGatewayRestController.logout(customerResponse.getId())){
             redirectAttributes.addFlashAttribute("error", new Error("could not log out", "gateway returned false for logout, could not end session"));
             return new RedirectView("/exception");
         }
@@ -114,25 +125,4 @@ public class UIController {
         return createSessionCookie(USER_NOT_LOGGED_IN);
     }
 
-//    private Map<Long, Employee> employeeMap = new HashMap<>();
-//
-//    @RequestMapping(value = "/addEmployee", method = RequestMethod.POST)
-//    public String submit(
-//            @ModelAttribute("employee") Employee employee,
-//            BindingResult result, ModelMap model) {
-//        if (result.hasErrors()) {
-//            return "error";
-//        }
-//        model.addAttribute("name", employee.getName());
-//        model.addAttribute("id", employee.getId());
-//
-//        employeeMap.put(employee.getId(), employee);
-//
-//        return "employeeView";
-//    }
-//
-//    @ModelAttribute
-//    public void addAttributes(Model model) {
-//        model.addAttribute("msg", "Welcome to the Netherlands!");
-//    }
 }

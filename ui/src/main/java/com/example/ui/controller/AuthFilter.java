@@ -6,6 +6,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,7 @@ import java.util.Objects;
 
 @Component
 @Order(2)
+@Slf4j
 public class AuthFilter implements Filter {
 
     @Autowired
@@ -37,6 +39,7 @@ public class AuthFilter implements Filter {
                     URI url = domainResolver.getUrl("iamService", "/api/v1/auth/token/" + sessionToken);
                     Boolean isAuth = restTemplate.getForObject(url, Boolean.class);
                     if(!isAuth){
+                        log.warn("Unauthenticated users request resources at path: " + path);
                         ((HttpServletResponse) servletResponse).sendError(HttpServletResponse.SC_UNAUTHORIZED, "The token is not valid.");
                         return;
                     }

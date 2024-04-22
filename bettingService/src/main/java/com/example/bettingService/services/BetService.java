@@ -12,6 +12,10 @@ public class BetService implements BasicServiceInterface<Bet, Long> {
     @Autowired
     private BetRepository betRepository;
 
+    public Iterable<Bet> findAllBetsOfCustomer(Long customerId){
+        return betRepository.findAllByBetCreatorIdOrBetTakerId(customerId, customerId);
+    }
+
     @Override
     public Bet save(Bet bet) {
         return betRepository.save(bet);

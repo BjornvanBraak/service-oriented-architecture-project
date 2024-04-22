@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/basic-styles.css"/>
+    <link rel="stylesheet" href="/css/index.css"/>
+    <title>Document</title>
+</head>
+<body>
+    <header th:replace="fragments/header :: header"></header>
+    <h1>admin panel</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>username</th>
+                <th>email</th>
+                <th>cruks</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="user: ${users}">
+                <td th:text="${user.id}" />
+                <td th:text="${user.name}"/>
+                <td th:text="${user.email}"/>
+                <td th:text="${user.cruks}"/>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

@@ -3,10 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/basic-styles.css"/>
     <title>Document</title>
 </head>
 <body>
     <header th:replace="fragments/header :: header"></header>
     <h1>index page</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>id</th>
+            <th>betValueCreator</th>
+            <th>betOnHomeTeamCreator</th>
+            <th>betStatus</th>
+            <th>payoutCreator</th>
+            <th>payoutTaker</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="bet: ${bets}">
+            <td th:text="${bet.id}" />
+            <td th:text="${bet.betValueCreator}"/>
+            <td th:text="${bet.betOnHomeTeamCreator}"/>
+            <td th:text="${bet.betStatus}"/>
+            <td th:text="${bet.payoutCreator}"/>
+            <td th:text="${bet.payoutTaker}"/>
+        </tr>
+        </tbody>
+    </table>
 </body>
 </html>

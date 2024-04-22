@@ -31,6 +31,10 @@ public class AuthRestController {
         return authService.verifySessionToken(sessionToken);
     }
 
+    /**
+     * For testing
+     * @return
+     */
     @GetMapping("/tokens")
     public Iterable<Session> getAllTokens(){
         return sessionRepository.findAll();
@@ -45,6 +49,11 @@ public class AuthRestController {
         String generated_session_token = "test_session_" + String.valueOf((int) Math.floor(Math.random() * 100000));
         authService.saveSessionToken(generated_session_token, customer.get().getId());
         return new LoginAttemptResponse(true, generated_session_token, customer.get());
+    }
+
+    @DeleteMapping("/logout/{customerId}")
+    public void logout(@PathVariable Long customerId){
+        authService.logout(customerId);
     }
 
 
