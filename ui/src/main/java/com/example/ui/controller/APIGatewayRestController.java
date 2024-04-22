@@ -1,9 +1,6 @@
 package com.example.ui.controller;
 
-import com.example.ui.entity.BetResponse;
-import com.example.ui.entity.CustomerResponse;
-import com.example.ui.entity.LoginAttempt;
-import com.example.ui.entity.LoginAttemptResponse;
+import com.example.ui.entity.*;
 import com.example.ui.exception.ServiceNotFound;
 import com.example.ui.helpers.DomainResolver;
 import jakarta.servlet.http.Cookie;
@@ -22,6 +19,7 @@ import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
@@ -62,6 +60,38 @@ public class APIGatewayRestController {
             URI url = domainResolver.getUrl("bettingService", "/api/v1/bets/customers/" + customerId);
             ResponseEntity<List<BetResponse>> response = restTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<BetResponse>>(){});
             return response.getBody();
+        } catch (ServiceNotFound e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<GameResponse> getOpenGames(){
+        URI base_url = null;
+        try {
+            base_url = domainResolver.getUrl("gameService", "/api/v1/games");
+            String base_query = base_url.getQuery();
+            String query;
+            if (base_query == null){
+                query = "open=true";
+            } else {
+                query = base_query + "&" + "open=true";
+            }
+            URI url = new URI(base_url.getScheme(), base_url.getAuthority(), base_url.getPath(), query, base_url.getFragment());
+            ResponseEntity<List<GameResponse>> response = restTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<GameResponse>>(){});
+            return response.getBody();
+        } catch (ServiceNotFound e) {
+            throw new RuntimeException(e);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public BetResponse placeBet(CreateBetAttempt createBetAttempt){
+        URI url = null;
+        try {
+            url = domainResolver.getUrl("bettingService", "/api/v1/bets");
+            BetResponse response = restTemplate.postForObject(url, createBetAttempt, BetResponse.class);
+            return response;
         } catch (ServiceNotFound e) {
             throw new RuntimeException(e);
         }

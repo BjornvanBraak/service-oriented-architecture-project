@@ -13,6 +13,16 @@ public class GameService implements BasicServiceInterface<Game, Long> {
     @Autowired
     private GameRepository gameRepository;
 
+    /**
+     * The GameResultService instance should be the only one with direct access to the repository.
+     */
+//    @Autowired
+//    private GameResultService gameResultService;
+
+    public Iterable<Game> findAllOpenGames(){
+        return gameRepository.findAllGamesWithNoGameResult();
+    }
+
     @Override
     public Game save(Game game) {
         return gameRepository.save(game);

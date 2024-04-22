@@ -34,7 +34,7 @@ spring:
     h2:
       console: enabled
   activemq:
-    broker-url: tcp://localhost:61616?wireFormat.maxInactivityDurationInitalDelay=30000
+    broker-url: tcp://localhost:6200?wireFormat.maxInactivityDurationInitalDelay=30000
     user: admin
     password: admin
 server:

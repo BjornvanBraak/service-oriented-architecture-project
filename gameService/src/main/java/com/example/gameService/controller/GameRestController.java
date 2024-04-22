@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +19,16 @@ public class GameRestController {
     @GetMapping("")
     public Iterable<Game> fetchGames(){
         return gameService.findAll();
+    }
+
+    @GetMapping(value = "", params = "open")
+    public Iterable<Game> fetchOpenGames(@RequestParam Boolean open){
+        System.out.println(open);
+        if(open){
+            return gameService.findAllOpenGames();
+        }
+        //otherwise return empty array for now
+        return new ArrayList<>();
     }
 
     @PostMapping("")
