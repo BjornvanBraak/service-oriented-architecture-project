@@ -1,0 +1,35 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example-ingress
+  annotations:
+    # nginx.ingress.kubernetes.io/rewrite-target: /$1
+    # kubernetes.io/ingress.class: "nginx" #see: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/multiple-ingress.md
+spec:
+  # ingressClassName: nginx #see: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/multiple-ingress.md
+  # defaultBackend:
+  #   service:
+  #     name: web
+  #     port:
+  #       number: 8080
+  rules:
+    - host: hello-world.project.soa.test
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: web
+                port:
+                  number: 8080
+    - host: test-app.project.soa.test
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: soa-project-ui-service
+                port:
+                  number: 80

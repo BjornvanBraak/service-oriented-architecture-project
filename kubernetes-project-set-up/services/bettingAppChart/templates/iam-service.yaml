@@ -1,0 +1,34 @@
+{{/* Implementation inspired by: https://helm.sh/docs/topics/library_charts/ */}}
+{{/* #overwrite specific values of the basic config */}}
+{{- define "bettingAppChart.iamService.deployment" -}}
+metadata:
+  name: soa-project-iam-deployment
+{{- end -}}
+
+{{- define "bettingAppChart.iamService.service" -}}
+metadata:
+  name: soa-project-iam-service
+{{- end -}}
+
+{{- define "bettingAppChart.iamService.prometheusServiceMonitor" -}}
+metadata:
+  name: soa-project-iam-monitor
+{{- end -}}
+
+
+{{- define "iamService.configmap" -}}
+{{/* #basic values used to generate the basic config */}}
+{{ $webPortName := "web" }}
+{{ $serviceName := "iam-service" }}
+{{ $contextPath := "/iam-service" }}
+{{ $appLabel := "expose-iam-service" }}
+{{ $serviceImage := "bjornvanbraak/soa-project-group-20-iam-service:alpha"}}
+{{/* #merge the special config with the basic config and list the output */}}
+{{ include "bettingAppChart.util.merge" (list (dict "serviceName" $serviceName "webPortName" $webPortName "contextPath" $contextPath "appLabel" $appLabel "serviceImage" $serviceImage) "bettingAppChart.iamService.deployment" "bettingAppChart.baseMicroservices.deployment.tpl") }}
+---
+{{ include "bettingAppChart.util.merge" (list (dict "serviceName" $serviceName "webPortName" $webPortName "contextPath" $contextPath "appLabel" $appLabel "serviceImage" $serviceImage) "bettingAppChart.iamService.service" "bettingAppChart.baseMicroservices.service.tpl") }}
+---
+{{ include "bettingAppChart.util.merge" (list (dict "serviceName" $serviceName "webPortName" $webPortName "contextPath" $contextPath "appLabel" $appLabel "serviceImage" $serviceImage) "bettingAppChart.iamService.prometheusServiceMonitor" "bettingAppChart.baseMicroservices.prometheusServiceMonitor.tpl") }}
+{{- end -}}
+
+{{ include "iamService.configmap" . }}

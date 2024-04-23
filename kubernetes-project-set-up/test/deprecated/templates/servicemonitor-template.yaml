@@ -1,0 +1,88 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    # serviceMonitorSelector: prometheus
+    # app: #ADDED maybe nice
+    release: prometheus-stack #SEE PROMETHEUS-CRD.YAML FOR UNDER SCRAPECONFIGSELECTOR
+    env: { { .Values.env } }
+  name: { { .Values.name } }
+  namespace: services
+spec:
+  endpoints:
+    - interval: 30s
+      targetPort: 8080
+      path: /actuator/prometheus
+  # namespaceSelector:
+  #   matchNames:
+  #   - prometheus
+  # selector:
+  #   matchLabels:
+  #     operated-prometheus: "true"
+# EXAMPLES:
+# SERVICE MONITOR EXAMPLE FROM GRAFANA
+# kind: ServiceMonitor
+# metadata:
+#   annotations:
+#     meta.helm.sh/release-name: prometheus-stack
+#     meta.helm.sh/release-namespace: monitoring
+#   creationTimestamp: "2024-04-09T20:20:18Z"
+#   generation: 1
+#   labels:
+#     app.kubernetes.io/instance: prometheus-stack
+#     app.kubernetes.io/managed-by: Helm
+#     app.kubernetes.io/name: grafana
+#     app.kubernetes.io/version: 8.5.27
+#     helm.sh/chart: grafana-7.3.7
+#   name: prometheus-stack-grafana
+#   namespace: monitoring
+#   resourceVersion: "1018"
+#   uid: 24368414-7fd3-4816-9771-6565cc309a17
+# spec:
+#   endpoints:
+#   - honorLabels: true
+#     path: /metrics
+#     port: http-web
+#     scheme: http
+#     scrapeTimeout: 30s
+#   jobLabel: prometheus-stack
+#   namespaceSelector:
+#     matchNames:
+#     - monitoring
+#   selector:
+#     matchLabels:
+#       app.kubernetes.io/instance: prometheus-stack
+#       app.kubernetes.io/name: grafana
+
+# SERVICE MONITOR EXAMPLE FROM NODE EXPORTER
+# apiVersion: monitoring.coreos.com/v1
+# kind: ServiceMonitor
+# metadata:
+# annotations:
+#   meta.helm.sh/release-name: prometheus-stack
+#   meta.helm.sh/release-namespace: monitoring
+# labels:
+# app.kubernetes.io/component: metrics
+# app.kubernetes.io/instance: prometheus-stack
+# app.kubernetes.io/managed-by: Helm
+# app.kubernetes.io/name: prometheus-node-exporter
+# app.kubernetes.io/part-of: prometheus-node-exporter
+# app.kubernetes.io/version: 1.7.0
+# helm.sh/chart: prometheus-node-exporter-4.32.0
+# jobLabel: node-exporter
+# release: prometheus-stack
+# name: prometheus-stack-prometheus-node-exporter
+# namespace: monitoring
+# resourceVersion: "1026"
+# uid: aa6ca18a-d953-4439-ad7d-34cddeff25f9
+# spec:
+#   attachMetadata:
+#     node: false
+#   endpoints:
+#   - port: http-metrics
+#     scheme: http
+#   jobLabel: jobLabel
+#   selector:
+#     matchLabels:
+#       app.kubernetes.io/instance: prometheus-stack
+#       app.kubernetes.io/name: prometheus-node-exporter

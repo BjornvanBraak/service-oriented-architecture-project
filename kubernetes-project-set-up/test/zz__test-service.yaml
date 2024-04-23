@@ -1,0 +1,34 @@
+{{/* Implementation inspired by: https://helm.sh/docs/topics/library_charts/ */}}
+{{/* #overwrite specific values of the basic config */}}
+{{- define "bettingAppChart.testService.deployment" -}}
+metadata:
+  name: soa-project-service-test-deployment
+{{- end -}}
+
+{{- define "bettingAppChart.testService.service" -}}
+metadata:
+  name: soa-project-service-test-service
+{{- end -}}
+
+{{- define "bettingAppChart.testService.prometheusServiceMonitor" -}}
+metadata:
+  name: soa-project-service-test-monitor
+{{- end -}}
+
+
+{{- define "mylibchart.configmap" -}}
+{{/* #basic values used to generate the basic config */}}
+{{ $webPortName := "web" }}
+{{ $serviceName := "test-service" }}
+{{ $contextPath := "/test-service" }}
+{{ $appLabel := "expose-test-service" }}
+{{ $serviceImage := "bjornvanbraak/soa-project-group-20-test-service:alpha"}}
+{{/* #merge the special config with the basic config and list the output */}}
+{{ include "mylibchart.util.merge" (list (dict "serviceName" $serviceName "webPortName" $webPortName "contextPath" $contextPath "appLabel" $appLabel "serviceImage" $serviceImage) "bettingAppChart.testService.deployment" "bettingAppChart.baseMicroservices.deployment.tpl") }}
+---
+{{ include "mylibchart.util.merge" (list (dict "serviceName" $serviceName "webPortName" $webPortName "contextPath" $contextPath "appLabel" $appLabel "serviceImage" $serviceImage) "bettingAppChart.testService.service" "bettingAppChart.baseMicroservices.service.tpl") }}
+---
+{{ include "mylibchart.util.merge" (list (dict "serviceName" $serviceName "webPortName" $webPortName "contextPath" $contextPath "appLabel" $appLabel "serviceImage" $serviceImage) "bettingAppChart.testService.prometheusServiceMonitor" "bettingAppChart.baseMicroservices.prometheusServiceMonitor.tpl") }}
+{{- end -}}
+
+{{ include "mylibchart.configmap" . }}
