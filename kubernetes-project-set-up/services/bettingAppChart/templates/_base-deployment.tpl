@@ -14,6 +14,8 @@ spec:
       env:
         - name: SPRING_APPLICATION_HOST
           value: localhost #not sure what this does
+        - name: SPRING_APPLICATION_NAME
+          value: {{ .serviceName }}
         - name: SERVER_PORT
           value: "8080"
         - name: SPRING_APPLICATION_LOGGINGHOST
