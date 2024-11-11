@@ -1,5 +1,8 @@
 package com.example.bettingService.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public enum BetStatus {
     BET_PLACEMENT_VERIFYING_CREATOR_AND_GAME,
     BET_PLACEMENT_VERIFYING_CREATOR_PAYMENT,

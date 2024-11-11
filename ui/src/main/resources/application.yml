@@ -66,10 +66,15 @@ logging:
 #    traces:
 #      receivers: [ otlp ]
 #      exporters: [ otlp, logging ]
+#external-services:
+#  domainAddresses:
+#    gameService: localhost:8081/game-service
+#    bettingService: localhost:8082/betting-service
+#    iamService: localhost:8083/iam-service
+#    balanceService: localhost:8084/balance-service
 external-services:
   domainAddresses:
-    gameService: localhost:8081/game-service
-    bettingService: localhost:8082/betting-service
-    iamService: localhost:8083/iam-service
-    balanceService: localhost:8084/balance-service
-
+    gameService: soa-project-game-service.services.svc.cluster.local:80/game-service
+    bettingService: soa-project-betting-service.services.svc.cluster.local:80/betting-service
+    iamService: soa-project-iam-service.services.svc.cluster.local:80/iam-service
+    balanceService: soa-project-balance-service.services.svc.cluster.local:80/balance-service

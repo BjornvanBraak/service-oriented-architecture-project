@@ -4,11 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/basic-styles.css"/>
+    <script src="/js/placeBet.js" defer></script>
     <title>Document</title>
 </head>
 <body>
     <header th:replace="fragments/header :: header"></header>
     <h1>index page</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>id</th>
+            <th>homeTeam</th>
+            <th>awayTeam</th>
+            <th>startTime</th>
+            <th>league</th>
+            <th>createBet</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="game: ${games}">
+            <td th:text="${game.id}" />
+            <td th:text="${game.homeTeam}"/>
+            <td th:text="${game.awayTeam}"/>
+            <td th:text="${game.startTime}"/>
+            <td th:text="${game.league}"/>
+            <td><a th:href="@{/create-bet/{gameId}(gameId=${game.id})}">create a bet</a></td>
+        </tr>
+        </tbody>
+    </table>
+
     <table>
         <thead>
         <tr>

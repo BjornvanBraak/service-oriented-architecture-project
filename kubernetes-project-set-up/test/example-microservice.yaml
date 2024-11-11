@@ -1,0 +1,64 @@
+# This is an example of what kubernetes resources are needed for correct configuration for a microservice in the soa project
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-service
+  labels:
+    app: test-service
+    app.kubernetes.io/name: test-service
+    purpose: demonstrate-envars
+spec:
+  containers:
+    - name: test-service-container
+      image: bjornvanbraak/soa-project-group-20-test-service:alpha
+      imagePullPolicy: Always #for development
+      env:
+        - name: SPRING_APPLICATION_HOST
+          value: localhost #not sure what this does
+        - name: SERVER_PORT
+          value: "8080"
+        - name: SPRING_APPLICATION_LOGGINGHOST
+          value: localhost #not sure what this does
+        - name: MANAGEMENT_OLTP_TRACING_EXPORT_GRPC_URL
+          value: http://otel-collector.monitoring.svc.cluster.local:4317
+        - name: MANAGEMENT_OLTP_TRACING_EXPORT_HTTP_ENDPOINT
+          value: http://otel-collector.monitoring.svc.cluster.local:4318/v1/traces
+        - name: SERVER_SERVLET_CONTEXT-PATH
+          value: /test-service
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: soa-project-service
+  labels:
+    job: node-api
+    app: expose-test-service
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: test-service
+  ports:
+    - name: web
+      protocol: TCP
+      port: 80
+      targetPort: 8080
+
+---
+#defines a service monitoring to make Prometheus aware of the service
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: api-service-monitor
+  labels:
+    release: prometheus-stack #SEE PROMETHEUS-CRD.YAML FOR UNDER SCRAPECONFIGSELECTOR
+    app: prometheus
+spec:
+  jobLabel: job #SEE PROMETHEUS-CRD.YAML
+  endpoints:
+    - interval: 30s
+      port: web
+      path: /test-service/actuator/prometheus
+  selector:
+    matchLabels:
+      app: expose-test-service

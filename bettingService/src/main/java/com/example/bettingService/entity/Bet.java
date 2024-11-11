@@ -1,7 +1,9 @@
 package com.example.bettingService.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
@@ -12,7 +14,7 @@ import lombok.Setter;
 public class Bet {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name="bet_value_creator")
     private float betValueCreator;
@@ -21,7 +23,7 @@ public class Bet {
     @Column(name="bet_on_home_team_creator")
     private boolean betOnHomeTeamCreator;
     @Enumerated(EnumType.STRING)
-    @Column(name="status")
+    @Column(name="bet_status")
     private BetStatus betStatus;
     @Column(name="payout_creator")
     private float payoutCreator;
@@ -35,4 +37,5 @@ public class Bet {
     private Long betTakerId;
     @Column(name="game_id")
     private Long gameId;
+
 }

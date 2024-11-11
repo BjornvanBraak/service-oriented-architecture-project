@@ -1,6 +1,8 @@
 package com.example.bettingService.controller;
 
 import com.example.bettingService.entity.Bet;
+import com.example.bettingService.entity.BetStatus;
+import com.example.bettingService.entity.CreateBetRequest;
 import com.example.bettingService.services.BetService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +25,12 @@ public class BetRestController {
     @GetMapping("/customers/{customerId}")
     public Iterable<Bet> fetchBetsOfCustomer(@PathVariable Long customerId){
         Iterable<Bet> bets = betService.findAllBetsOfCustomer(customerId);
-        System.out.println(bets);
         return bets;
     }
 
     @PostMapping("")
-    public Bet saveBet(@Valid @RequestBody Bet Bet){
-        return betService.save(Bet);
+    public Bet saveBet(@Valid @RequestBody CreateBetRequest createBetRequest){
+        return betService.placeBet(createBetRequest);
     }
 
     @GetMapping("/{id}")

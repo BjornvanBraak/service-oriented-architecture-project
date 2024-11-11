@@ -1,0 +1,12 @@
+{{- define "mychart.app" -}}
+  app_name: {{ .Chart.Name }}
+  app_version: "{{ .Chart.Version }}"
+{{- end -}}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-configmap
+data:
+  myvalue: "Hello World"
+  drink: {{ quote .Values.favoriteDrink }}

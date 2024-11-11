@@ -19,6 +19,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 //@RestController
@@ -51,7 +52,9 @@ public class UIController {
             return "redirect:/exception";
         }
         List<BetResponse> bets = apiGatewayRestController.getBets(customer.getId());
+        List<GameResponse> openGames = apiGatewayRestController.getOpenGames();
         model.addAttribute("bets", bets);
+        model.addAttribute("games", openGames);
         return "index";
     }
 
@@ -110,6 +113,26 @@ public class UIController {
     @GetMapping("/exception")
     private String error(){
         return "error-ui";
+    }
+
+    @GetMapping("/create-bet/{gameId}")
+    private String createBetFormPage(Model model, @PathVariable Long gameId){
+        model.addAttribute("gameId", gameId);
+        model.addAttribute("createBetAttempt", new CreateBetAttempt());
+        return "bet-form";
+    }
+
+    @PostMapping(value = "/create-bet/{gameId}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    private RedirectView submitCreateBetForm(@RequestParam float betValueCreator, @RequestParam float betValueTaker, @RequestParam boolean betOnHomeTeamCreator, HttpSession session, @PathVariable Long gameId, RedirectAttributes redirectAttributes){
+        CustomerResponse customer = (CustomerResponse) session.getAttribute("user");
+        Long betCreatorId = customer.getId();
+        CreateBetAttempt betAttempt = new CreateBetAttempt(betValueCreator, betValueTaker, betOnHomeTeamCreator, betCreatorId, gameId);
+        BetResponse betResponse = apiGatewayRestController.placeBet(betAttempt);
+        if(!(Objects.equals(betResponse.getBetStatus(), "BET_PLACEMENT_WAITING_FOR_ACCEPTOR"))){
+            redirectAttributes.addFlashAttribute("error", new Error("you are not logged in, please go to /login", "User has authenticated, but user has not been set (likely not logged out so cookie is still there)"));
+            return new RedirectView("/exception");
+        }
+        return new RedirectView("/");
     }
 
     private Cookie createSessionCookie(String sessionToken){

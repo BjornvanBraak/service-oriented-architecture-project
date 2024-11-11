@@ -30,8 +30,10 @@ public class AuthFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         if(Objects.equals(servletRequest.getScheme(), "http") || Objects.equals(servletRequest.getScheme(), "https")){
             String path = ((HttpServletRequest) servletRequest).getServletPath();
-            if(!Objects.equals(path, "/login")){
+            log.info("Requesting resources from ui at path: " + path);
+            if(isProtectedPath(path)){
                 Cookie sessionTokenCookie = WebUtils.getCookie(((HttpServletRequest) servletRequest), "sessionToken");
+                System.out.println(sessionTokenCookie);
                 assert sessionTokenCookie != null;
                 String sessionToken = sessionTokenCookie.getValue();
                 System.out.println(sessionToken);
@@ -48,7 +50,23 @@ public class AuthFilter implements Filter {
                 }
             }
             filterChain.doFilter(servletRequest, servletResponse);
+        } else {
+            //any traffic other than http is not protected for the demo
+            filterChain.doFilter(servletRequest, servletResponse);
         }
+
+    }
+
+    private boolean isProtectedPath(String path){
+        System.out.print(path);
+        System.out.println("path is equal to login: " + Objects.equals(path, "/login"));
+        System.out.println("path is equal to metrics: " + Objects.equals(path, "/actuator/prometheus"));
+//        System.out.println("path is equal to metrics: " + Objects.equals(path, "/admin"));
+        //for the demo we do not protect the scraping endpoint of prometheus
+        if(Objects.equals(path, "/login") || Objects.equals(path, "/actuator/prometheus")){
+            return false;
+        }
+        return true;
     }
 
 //    private HttpServletResponse createBlockServletResponse(HttpServletResponse response){

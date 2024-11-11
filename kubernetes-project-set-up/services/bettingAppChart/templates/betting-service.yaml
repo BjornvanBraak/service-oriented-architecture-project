@@ -1,0 +1,34 @@
+{{/* Implementation inspired by: https://helm.sh/docs/topics/library_charts/ */}}
+{{/* #overwrite specific values of the basic config */}}
+{{- define "bettingAppChart.bettingService.deployment" -}}
+metadata:
+  name: soa-project-betting-deployment
+{{- end -}}
+
+{{- define "bettingAppChart.bettingService.service" -}}
+metadata:
+  name: soa-project-betting-service
+{{- end -}}
+
+{{- define "bettingAppChart.bettingService.prometheusServiceMonitor" -}}
+metadata:
+  name: soa-project-betting-monitor
+{{- end -}}
+
+
+{{- define "bettingService.configmap" -}}
+{{/* #basic values used to generate the basic config */}}
+{{ $webPortName := "web" }}
+{{ $serviceName := "betting-service" }}
+{{ $contextPath := "/betting-service" }}
+{{ $appLabel := "expose-betting-service" }}
+{{ $serviceImage := "bjornvanbraak/soa-project-group-20-betting-service:alpha"}}
+{{/* #merge the special config with the basic config and list the output */}}
+{{ include "bettingAppChart.util.merge" (list (dict "serviceName" $serviceName "webPortName" $webPortName "contextPath" $contextPath "appLabel" $appLabel "serviceImage" $serviceImage) "bettingAppChart.bettingService.deployment" "bettingAppChart.baseMicroservices.deployment.tpl") }}
+---
+{{ include "bettingAppChart.util.merge" (list (dict "serviceName" $serviceName "webPortName" $webPortName "contextPath" $contextPath "appLabel" $appLabel "serviceImage" $serviceImage) "bettingAppChart.bettingService.service" "bettingAppChart.baseMicroservices.service.tpl") }}
+---
+{{ include "bettingAppChart.util.merge" (list (dict "serviceName" $serviceName "webPortName" $webPortName "contextPath" $contextPath "appLabel" $appLabel "serviceImage" $serviceImage) "bettingAppChart.bettingService.prometheusServiceMonitor" "bettingAppChart.baseMicroservices.prometheusServiceMonitor.tpl") }}
+{{- end -}}
+
+{{ include "bettingService.configmap" . }}

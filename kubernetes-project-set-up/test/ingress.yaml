@@ -1,0 +1,30 @@
+# src: https://kubernetes.io/docs/concepts/services-networking/ingress/
+# modified
+# IMPORTNANT: An Ingress controller is responsible for fulfilling the Ingress, usually with a load balancer, though it may also configure your edge router or additional frontends to help handle the traffic.
+# --> this means you need to set up a controller
+# --> in minikube this can be done by: minikube addons enable ingress
+# src: https://kubernetes.io/docs/tasks/access-application-cluster/ingress-minikube/
+# src: https://minikube.sigs.k8s.io/docs/handbook/addons/ingress-dns/
+# to update the dns on windows:
+# Get-DnsClientNrptRule | Where-Object {$_.Namespace -eq '.test'} | Remove-DnsClientNrptRule -Force; Add-DnsClientNrptRule -Namespace ".test" -NameServers "$(minikube ip)"
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: minimal-ingress
+  # namespace: { { .Release.Namespace } } #should be in the same namespace as the other services
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx-example
+  rules:
+    # An optional host. In this example, no host is specified, so the rule applies to all inbound HTTP traffic through the IP address specified. If a host is provided (for example, foo.bar.com), the rules apply to that host.
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: test-service
+                port:
+                  number: 80
